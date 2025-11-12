@@ -1,14 +1,16 @@
+
+# ---- Image de base ----
 FROM python:3.11-slim
 
-# تحديد مجلد العمل داخل الحاوية
+# ---- Dossier de travail ----
 WORKDIR /app
 
-# نسخ ملفات المشروع
+# ---- Copier les fichiers du projet ----
 COPY . .
 
-# تثبيت المكتبات
+# ---- Installer les dépendances ----
 RUN pip install --upgrade pip
 RUN pip install django djongo pymongo
 
-# تشغيل السيرفر
+# ---- Lancer le serveur ----
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
