@@ -75,10 +75,15 @@ WSGI_APPLICATION = 'gestion_stock.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',       # محرك الاتصال بـ MongoDB
+        'NAME': 'inventory_db',   # اسم قاعدة البيانات داخل MongoDB
+        'ENFORCE_SCHEMA': False,  
+        'CLIENT': {
+            'host': 'mongodb://mongo:27017',  # رابط الاتصال بالحاوية MongoDB
+        }  
     }
 }
+
 
 
 # Password validation
