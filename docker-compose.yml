@@ -1,23 +1,21 @@
-version: "3.8"
-
+version: "3.9"  
 services:
   web:
     build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
     ports:
       - "8000:8000"
     depends_on:
       - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/inventory_db
-    command: python manage.py runserver 0.0.0.0:8000
 
   mongo:
-    image: mongo:6
-    restart: always
-    volumes:
-      - mongo_data:/data/db
+    image: mongo:latest
     ports:
       - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
 volumes:
   mongo_data:
