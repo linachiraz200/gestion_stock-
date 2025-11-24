@@ -1,0 +1,111 @@
+/* إزالة أي هوامش افتراضية */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+/* الشريط العلوي البرتقالي */
+.top-bar {
+    background-color: orange;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+/* اللوجو في دائرة على اليسار */
+.logo-circle {
+    background-color: orange;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 15px 25px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+}
+
+/* روابط القائمة العلوية */
+.top-nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.top-nav a:hover {
+    color: #001f3f; /* أزرق مسود */
+}
+
+/* الشريط الأوسط الأزرق يغطي الوسط بالكامل */
+.middle-bar {
+    background-color: #001f3f; /* أزرق مسود */
+    color: #fff;
+    flex: 1; /* ليملأ كل المساحة المتبقية */
+    text-align: center;
+    padding: 50px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* نصوص الوسط */
+.middle-bar h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.middle-bar p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+/* زر الوسط */
+.middle-bar .btn {
+    background-color: orange;
+    color: #fff;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.middle-bar .btn:hover {
+    background-color: #ff8533;
+}
+
+/* الشريط السفلي الأسود */
+.bottom-bar {
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+}
+
+/* أزرار السوشيال */
+.bottom-bar .social-buttons a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.bottom-bar .social-buttons a:hover {
+    color: orange;
+}
+

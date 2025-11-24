@@ -49,30 +49,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gestion_stock.wsgi.application'
 
-# إعداد قاعدة البيانات MongoDB من البيئة
+# إعداد قاعدة البيانات MongoDB
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': os.environ.get('DJANGO_DB_NAME', 'gestion_stock'),
-        'HOST': os.environ.get('DJANGO_DB_HOST', 'mongo'),
-        'PORT': int(os.environ.get('DJANGO_DB_PORT', 27017)),
+        'NAME': 'gestion_stock_db',
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': 'mongo',
+            'port': 27017
+        }
     }
 }
 
-# كلمات السر، الجلسات، والستاتيك
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 LANGUAGE_CODE = 'en-us'
