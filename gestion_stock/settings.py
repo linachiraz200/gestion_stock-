@@ -1,14 +1,12 @@
 import os
 from pathlib import Path
 
-# مسار المشروع
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'replace-this-with-your-secret-key'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-# التطبيقات
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -16,7 +14,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # أضيفي تطبيقاتك هنا
+    'produits',  # تطبيق المنتجات
 ]
 
 MIDDLEWARE = [
@@ -49,7 +47,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gestion_stock.wsgi.application'
 
-# إعداد قاعدة البيانات MongoDB
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -62,18 +59,10 @@ DATABASES = {
     }
 }
 
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
-]
-
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']

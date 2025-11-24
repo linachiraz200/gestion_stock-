@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des produits</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo-circle">Cyber Security</div>
+        <nav class="top-nav">
+            <a href="/">Accueil</a>
+            <a href="/produits/">Produits</a>
+        </nav>
+    </div>
+
+    <div class="middle-bar">
+        <h1>Liste des produits</h1>
+        <ul>
+            {% for produit in produits %}
+                <li>{{ produit.nom }} - {{ produit.prix }} €</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <footer class="bottom-bar">
+        <p>© 2025 Linach. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
