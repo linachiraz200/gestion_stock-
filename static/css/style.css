@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+}
+
+/* شريط علوي */
+.top-bar {
+    background: #0d6efd;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-circle {
+    background-color: #ff5722;
+    padding: 10px 20px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.top-nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.top-nav a:hover {
+    color: #ffcc00;
+}
+
+/* الوسط full-screen مع الخلفية التقنية المتحركة */
+.middle-bar {
+    background: linear-gradient(to bottom right, #1a1a2e, #0d6efd);
+    position: relative;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); /* خصم ارتفاع الشريط السفلي */
+    padding: 0 20px;
+    overflow: hidden;
+}
+
+/* خلفية Pattern متحركة */
+.middle-bar::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+    opacity: 0.1;
+    z-index: 0;
+    animation: movePattern 20s linear infinite;
+}
+
+@keyframes movePattern {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(50px, 50px); }
+    100% { transform: translate(0, 0); }
+}
+
+.middle-bar h1,
+.middle-bar p,
+.middle-bar .btn {
+    position: relative; /* النص فوق الخلفية */
+    z-index: 1;
+}
+
+.middle-bar h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #ffcc00;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+.middle-bar p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #c0c0c0;
+    max-width: 700px;
+}
+
+.middle-bar .btn {
+    padding: 12px 25px;
+    background-color: #ff5722;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.middle-bar .btn:hover {
+    background-color: #ff9800;
+}
+
+/* شريط سفلي أسود */
+.bottom-bar {
+    background-color: #000;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.bottom-bar .social-buttons a {
+    color: white;
+    margin: 0 10px;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+.bottom-bar .social-buttons a:hover {
+    color: #0d6efd;
+}
+
+/* جعل النصوص والواجهة كاملة تظهر بشكل مناسب على الشاشات الصغيرة */
+@media (max-height: 700px) {
+    .middle-bar h1 { font-size: 2em; }
+    .middle-bar p { font-size: 1em; }
+    .middle-bar .btn { padding: 10px 20px; }
+}
+
+
+
+
