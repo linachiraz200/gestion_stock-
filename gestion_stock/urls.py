@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('produits.urls')),
+        path('fournisseur/', include('fournisseur.urls')),  # 👈 نربطو الفورنيسور
 ]
