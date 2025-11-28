@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Clients</title>
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .container-box {
+            margin-top: 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+        }
+        .table th {
+            background-color: #198754 !important;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="container-box">
+
+        <h2 class="text-center mb-4">👥 Liste des Clients</h2>
+
+        <!-- Add button -->
+        <div class="text-center mb-3">
+            <a href="{% url 'ajouter_client' %}" class="btn btn-success">
+                + Ajouter un Client
+            </a>
+        </div>
+
+        <!-- Table -->
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead>
+                <tr>
+                    <th>Nom et Prénom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Adresse</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.prenom }} {{ client.nom }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.telephone }}</td>
+                    <td>{{ client.adresse }}</td>
+
+                    <td>
+                        <a href="{% url 'modifier_client' client.id %}" class="btn btn-primary btn-sm">
+                            Modifier
+                        </a>
+
+                        <a href="{% url 'supprimer_client' client.id %}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce client ?');">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-muted">Aucun client trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Back button -->
+        <div class="text-center mt-3">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">⬅ Retour au Dashboard</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

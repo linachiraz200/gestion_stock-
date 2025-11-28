@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier un Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .btn-modifier {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .btn-modifier:hover {
+            background-color: #0056b3;
+        }
+        .btn-retour {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 15px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn-retour:hover {
+            background-color: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✏️ Modifier le Client</h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" value="{{ client.nom }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" value="{{ client.prenom }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" value="{{ client.email }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telephone">Téléphone :</label>
+                <input type="text" id="telephone" name="telephone" value="{{ client.telephone }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="adresse">Adresse :</label>
+                <textarea id="adresse" name="adresse" required>{{ client.adresse }}</textarea>
+            </div>
+            
+            <button type="submit" class="btn-modifier">Mettre à jour</button>
+        </form>
+        
+        <a href="{% url 'liste_clients' %}" class="btn-retour">← Retour à la liste</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier Fournisseur</title>
+</head>
+<body>
+    <h2>Modifier Fournisseur</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <label>Nom :</label><br>
+        <input type="text" name="nom" value="{{ fournisseur.nom }}"><br><br>
+
+        <label>Adresse :</label><br>
+        <input type="text" name="adresse" value="{{ fournisseur.adresse }}"><br><br>
+
+        <label>Téléphone :</label><br>
+        <input type="text" name="telephone" value="{{ fournisseur.telephone }}"><br><br>
+
+        <button type="submit">Modifier</button>
+    </form>
+
+    <br>
+    <a href="{% url 'liste_fournisseurs' %}">⮜ Retour</a>
+</body>
+</html>

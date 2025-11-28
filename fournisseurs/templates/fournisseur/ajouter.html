@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter Fournisseur</title>
+    <style>
+        body { font-family: Arial; background:#f4f4f4; padding:20px; }
+        .form-container {
+            width: 40%; margin: auto; background:white; padding:20px;
+            border-radius:10px; box-shadow:0 0 10px #aaa;
+        }
+        label { font-weight:bold; }
+        input {
+            width:100%; padding:10px; margin:10px 0;
+            border:1px solid #ccc; border-radius:5px;
+        }
+        button {
+            padding:10px 20px; background:#28a745; color:white;
+            border:none; border-radius:5px; cursor:pointer;
+        }
+        button:hover { background:#218838; }
+        .back { text-align:center; margin-top:15px; }
+        a { text-decoration:none; color:#007bff; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Ajouter un Fournisseur</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Nom :</label>
+        <input type="text" name="nom" required>
+
+        <label>Adresse :</label>
+        <input type="text" name="adresse" required>
+
+        <label>Téléphone :</label>
+        <input type="text" name="telephone" required>
+
+        <button type="submit">Enregistrer</button>
+    </form>
+
+    <div class="back">
+        <a href="/fournisseur/">⬅ Retour</a>
+    </div>
+</div>
+
+</body>
+</html>
