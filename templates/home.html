@@ -1,39 +1,44 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linach - Gestion des produits</title>
+    <title>Linach - Gestion de stock</title>
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- شريط علوي -->
     <div class="top-bar">
         <div class="logo-circle">Cyber Security</div>
         <nav class="top-nav">
-            <a href="/">Accueil</a>
-            <a href="/produits/">Produits</a>
+            <a href="{% url 'home' %}">Accueil</a>
+            <a href="http://localhost:8000/fournisseur/">Fournisseurs</a>
+            <a href="{% url 'produits_list' %}">Produits</a>
             <a href="#">Ajouter</a>
             <a href="#">Contact</a>
         </nav>
     </div>
 
+    <!-- الوسط يغطي كامل الشاشة (نضيف تصميم فقط بلا أزرار) -->
     <div class="middle-bar">
         <h1>Bienvenue dans l'application de gestion de stock</h1>
-        <p>Gérez vos produits facilement avec une interface moderne, colorée et intuitive. Ajoutez, modifiez ou supprimez vos produits avec style et efficacité.</p>
-        <a class="btn" href="/produits/">Voir les produits</a>
+        <p>Gérez vos produits facilement avec une interface moderne, colorée et intuitive.</p>
     </div>
 
+    <!-- الشريط السفلي -->
     <footer class="bottom-bar">
         <div class="social-buttons">
-            <a href="#"><img src="{% static 'icons/facebook.svg' %}" alt="Facebook"></a>
-            <a href="#"><img src="{% static 'icons/instagram.svg' %}" alt="Instagram"></a>
-            <a href="#"><img src="{% static 'icons/telegram.svg' %}" alt="Telegram"></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-telegram"></i></a>
         </div>
         <p>© 2025 Linach. Tous droits réservés.</p>
     </footer>
 </body>
 </html>
+
+
 
 
 
