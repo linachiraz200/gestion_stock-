@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Fournisseurs</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            background:#eef2f3; 
+            padding:20px; 
+        }
+
+        .title-box{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:10px;
+            margin-bottom:20px;
+        }
+
+        .title-box img{
+            width:40px;
+            height:40px;
+        }
+
+        table {
+            width: 70%; 
+            margin: auto; 
+            border-collapse: collapse;
+            background: white; 
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        th, td {
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            text-align: center;
+        }
+
+        th { 
+            background: #007bff; 
+            color: white; 
+        }
+
+        tr:hover { 
+            background: #f1f1f1; 
+        }
+
+        .btn-ajouter {
+            display: block; 
+            width: 220px; 
+            margin: 20px auto;
+            background:#28a745; 
+            color:white; 
+            text-align:center;
+            padding:12px; 
+            text-decoration:none; 
+            border-radius:6px;
+            font-size:16px;
+            font-weight:bold;
+        }
+
+        .btn-ajouter:hover {
+            background:#218838;
+        }
+
+        .btn-modifier { 
+            color: #007bff; 
+            font-weight:bold;
+            text-decoration:none; 
+        }
+
+        .btn-modifier:hover { 
+            text-decoration: underline;
+        }
+
+        .btn-supprimer { 
+            color: red; 
+            font-weight:bold;
+            text-decoration:none; 
+        }
+
+        .btn-supprimer:hover { 
+            text-decoration: underline;
+        }
+
+        .back { 
+            text-align:center; 
+            margin-top:20px; 
+        }
+
+        .back a {
+            color:#007bff;
+            text-decoration:none;
+            font-size:18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="title-box">
+    <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png">
+    <h1>Liste des Fournisseurs</h1>
+</div>
+
+<a href="/fournisseur/ajouter/" class="btn-ajouter">+ Ajouter Fournisseur</a>
+
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>Adresse</th>
+        <th>Téléphone</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for f in fournisseurs %}
+    <tr>
+        <td>{{ f.nom }}</td>
+        <td>{{ f.adresse }}</td>
+        <td>{{ f.telephone }}</td>
+        <td>
+            <a href="/fournisseur/modifier/{{ f.id }}/" class="btn-modifier">Modifier</a> |
+            <a href="/fournisseur/supprimer/{{ f.id }}/" class="btn-supprimer">Supprimer</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="back">
+    <a href="/dashboard/">⬅ Retour au Dashboard</a>
+</div>
+
+</body>
+</html>

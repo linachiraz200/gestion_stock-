@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Linach - Connexion</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0f2027;  /* لون خلفية داكن تقني */
+            background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* تأثير صورة متحركة خلفية */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background: url("https://images.unsplash.com/photo-1518770660439-4636190af475?fit=crop&w=1350&q=80") no-repeat center center;
+            background-size: cover;
+            animation: move 30s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes move {
+            0% { transform: translate(0,0); }
+            50% { transform: translate(-50px,-50px); }
+            100% { transform: translate(0,0); }
+        }
+
+        .login-container {
+            background-color: rgba(0,0,0,0.8); /* نصف شفاف */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            width: 350px;
+            color: #00ffcc; /* لون النص تقني */
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #00ffcc;
+        }
+
+        .login-container form input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #00ffcc;
+            background-color: #0f2027;
+            color: #00ffcc;
+        }
+
+        .login-container form input::placeholder {
+            color: #66ffdd;
+        }
+
+        .login-container form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00ffcc;
+            color: #0f2027;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .login-container form button:hover {
+            background-color: #33ffe6;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="login-container">
+        <h2>Connexion</h2>
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <button type="submit">Se connecter</button>
+        </form>
+    </div>
+</body>
+</html>
+
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+</div>
+
+</body>
+</html>
+
+

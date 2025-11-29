@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer Produit - Linach</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #eef2f3; font-family: Arial; padding: 20px; }
+        .container-box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #aaa; margin-top: 20px; max-width: 500px; text-align: center; }
+        .warning-box { background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<div class="container container-box">
+    <h2 class="text-danger mb-4">🗑️ Supprimer le Produit</h2>
+    <div class="warning-box">
+        ⚠️ <strong>Attention!</strong> Cette action est irréversible.
+    </div>
+    <p><strong>Produit :</strong> {{ produit.nom }}</p>
+    <p><strong>Quantité :</strong> {{ produit.quantite }}</p>
+    <p><strong>Prix :</strong> {{ produit.prix }} €</p>
+    <form method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">✅ Oui, supprimer</button>
+    </form>
+    <a href="{% url 'liste_produits' %}" class="btn btn-secondary">❌ Non, annuler</a>
+</div>
+</body>
+</html>

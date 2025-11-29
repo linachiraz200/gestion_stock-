@@ -3,9 +3,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'replace-this-with-your-secret-key'
+SECRET_KEY = 'your-secret-key-here'
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -14,8 +14,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'produits',      # تطبيق المنتجات
-    'fournisseurs',  # تطبيق الفورنيسور
+
+    'produits',
+    'fournisseurs',
+    'clients',
 ]
 
 MIDDLEWARE = [
@@ -33,7 +35,7 @@ ROOT_URLCONF = 'gestion_stock.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],   # ← هنا السحر
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -50,15 +52,12 @@ WSGI_APPLICATION = 'gestion_stock.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'gestion_stock_db',
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': 'mongo',
-            'port': 27017
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -66,5 +65,3 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-

@@ -1,29 +1,138 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Linach - Gestion de stock</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Dashboard - Gestion de Stock</title>
+    {% load static %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- الخلفية القديمة Cyber Security --- */
+        .dashboard-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?fit=crop&w=1400&q=80") 
+                no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        /* --- الشريط العلوي على اليمين --- */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 15px;
+            display: flex;
+            gap: 20px;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+        }
+
+        .top-nav a {
+            color: cyan;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .top-nav a:hover {
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+        }
+
+        /* --- محتوى الوسط --- */
+        .content {
+            text-align: center;
+            padding: 150px 20px 50px 20px;
+            color: #ffffff;
+        }
+
+        .content h1 {
+            font-size: 3em;
+            color: #ffffff;
+            text-shadow: 0 0 5px #000000, 1px 1px 5px #000000;
+        }
+
+        .content p {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: #ffffff;
+            text-shadow: 0 0 3px #000000, 1px 1px 4px #000000;
+        }
+
+        /* --- الشريط السفلي --- */
+        footer.bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.8);
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .social-buttons a {
+            color: cyan;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 1.3em;
+            transition: 0.3s;
+        }
+
+        .social-buttons a:hover {
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+        }
+
+        /* --- حقوق الطبع --- */
+        .copyright {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #00ffff;
+        }
+
+        /* --- بوتون الفواتير نفس شكل البوتونات الأخرى --- */
+        .invoice-btn {
+            color: cyan;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .invoice-btn:hover {
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- شريط علوي -->
-    <div class="top-bar">
-        <div class="logo-circle">Cyber Security</div>
-        <nav class="top-nav">
-            <a href="#">Accueil</a>
-            <a href="#">Produits</a>
-            <a href="#">Ajouter</a>
-            <a href="#">Contact</a>
-        </nav>
+
+    <!-- الخلفية القديمة -->
+    <div class="dashboard-bg"></div>
+
+    <!-- الشريط العلوي مع البوتونات -->
+    <div class="top-nav">
+        <a href="/dashboard/">Accueil</a>
+        <a href="/produits/">Produits</a>
+        <a href="/fournisseur/">Fournisseurs</a>
+        <a href="/logout/">Déconnexion</a>
+        <a href="/factures/" class="invoice-btn">Factures</a>
+      <a href="{% url 'clients:liste_clients' %}">Clients</a>
+
+
     </div>
 
-    <!-- الوسط يغطي كامل الشاشة -->
-    <div class="middle-bar">
-        <h1>Bienvenue dans l'application de gestion de stock</h1>
-        <p>Gérez vos produits facilement avec une interface moderne, colorée et intuitive. Ajoutez, modifiez ou supprimez vos produits avec style et efficacité.</p>
-        <a class="btn" href="#">Voir les produits</a>
+    <!-- محتوى الوسط -->
+    <div class="content">
+        <h1>Bienvenue dans votre Dashboard</h1>
+        <p>Cette interface est prête pour vos opérations de gestion de stock.</p>
     </div>
 
     <!-- الشريط السفلي -->
@@ -33,12 +142,10 @@
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-telegram"></i></a>
         </div>
-        <p>© 2025 Linach. Tous droits réservés.</p>
+        <div class="copyright">
+            © 2025 Gestion de Stock - Tous droits réservés
+        </div>
     </footer>
+
 </body>
 </html>
-
-
-
-
-

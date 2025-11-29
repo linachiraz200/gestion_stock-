@@ -8,25 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- شريط علوي -->
     <div class="top-bar">
         <div class="logo-circle">Cyber Security</div>
         <nav class="top-nav">
             <a href="{% url 'home' %}">Accueil</a>
-            <a href="http://localhost:8000/fournisseur/">Fournisseurs</a>
+            <a href="{% url 'liste_fournisseurs' %}">Fournisseurs</a>
             <a href="{% url 'produits_list' %}">Produits</a>
             <a href="#">Ajouter</a>
             <a href="#">Contact</a>
         </nav>
     </div>
 
-    <!-- الوسط يغطي كامل الشاشة (نضيف تصميم فقط بلا أزرار) -->
     <div class="middle-bar">
         <h1>Bienvenue dans l'application de gestion de stock</h1>
         <p>Gérez vos produits facilement avec une interface moderne, colorée et intuitive.</p>
+        <a class="btn" href="{% url 'liste_fournisseurs' %}">Voir les fournisseurs</a>
+        <a class="btn" href="{% url 'produits_list' %}">Voir les produits</a>
     </div>
 
-    <!-- الشريط السفلي -->
     <footer class="bottom-bar">
         <div class="social-buttons">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -37,6 +36,9 @@
     </footer>
 </body>
 </html>
+
+
+
 
 
 

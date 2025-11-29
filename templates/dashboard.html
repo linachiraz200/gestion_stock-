@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div style="text-align:center; margin-top:50px;">
+    <h1>Bienvenue dans le tableau de bord</h1>
+    <div style="margin-top:30px;">
+        <a href="{% url 'liste_produits' %}" class="btn">📦 Liste des Produits</a>
+        <a href="{% url 'liste_fournisseurs' %}" class="btn">🚚 Liste des Fournisseurs</a>
+        <a href="{% url 'liste_clients' %}" class="btn">👥 Liste des Clients</a>
+    </div>
+</div>
+{% endblock %}
