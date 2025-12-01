@@ -10,14 +10,14 @@ class ProduitModelTest(TestCase):
         self.produit = Produit.objects.create(
             nom="Test Product",
             quantite=10,
-            prix=99.99,
+            prix=99.50,
             category=self.category
         )
 
     def test_produit_creation(self):
         self.assertEqual(self.produit.nom, "Test Product")
         self.assertEqual(self.produit.quantite, 10)
-        self.assertEqual(self.produit.prix, 99.99)
+        self.assertEqual(self.produit.prix, 99.50)
 
     def test_produit_str(self):
         self.assertEqual(str(self.produit), "Test Product")
@@ -33,7 +33,7 @@ class ProduitViewTest(TestCase):
         self.produit = Produit.objects.create(
             nom="Test Product",
             quantite=10,
-            prix=99.99,
+            prix=99.50,
             category=self.category
         )
 

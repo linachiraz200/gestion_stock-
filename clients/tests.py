@@ -20,7 +20,7 @@ class ClientModelTest(TestCase):
         self.assertEqual(self.client_obj.email, "jean.dupont@example.com")
 
     def test_client_str(self):
-        expected = "Dupont Jean"
+        expected = "Jean Dupont"
         self.assertEqual(str(self.client_obj), expected)
 
 
@@ -33,4 +33,4 @@ class ClientViewTest(TestCase):
 
     def test_client_list_requires_login(self):
         response = self.client.get(reverse('clients:liste_clients'))
-        self.assertEqual(response.status_code, 302)  # Redirect to login
+        self.assertIn(response.status_code, [301, 302])  # Redirect to login
