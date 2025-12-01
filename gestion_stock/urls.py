@@ -11,6 +11,8 @@ urlpatterns = [
 
     path('produits/', include('produits.urls')),
     path('fournisseur/', include('fournisseurs.urls')),
-    path('clients/', include('clients.urls', namespace='clients')),  # مهم للزر Clients
+    path('clients/', include('clients.urls', namespace='clients')),
+    path('factures/', include('factures.urls')),
+    path('core/', include('core.urls')),
 ]
 

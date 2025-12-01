@@ -1,53 +1,289 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Produits - Linach</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #eef2f3; font-family: Arial; padding: 20px; }
-        .container-box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #aaa; margin-top: 20px; }
-        th { background-color: #007bff; color: white; }
-        .btn-add { margin-bottom: 15px; }
-    </style>
-</head>
-<body>
-<div class="container container-box">
-    <h2 class="text-center mb-4">📦 Liste des Produits</h2>
-    <div class="text-center btn-add">
-        <a href="{% url 'ajouter_produit' %}" class="btn btn-success">+ Ajouter un Produit</a>
+{% extends 'base.html' %}
+{% block title %}Produits - Gestion de Stock{% endblock %}
+{% block content %}
+<div class="content-container">
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1 class="page-title"><i class="fas fa-box"></i> Gestion des Produits</h1>
+                    <p class="page-subtitle">Visualisez et gérez tous vos produits en stock</p>
+                </div>
+                <div class="header-actions">
+                    <a href="{% url 'produits:export_produits_csv' %}" class="btn btn-success me-2">
+                        <i class="fas fa-download"></i> Exporter CSV
+                    </a>
+                    <a href="{% url 'produits:ajouter_produit' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Ajouter un Produit
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <table class="table table-bordered table-hover text-center align-middle">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Quantité</th>
-                <th>Prix (€)</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for produit in produits %}
-            <tr>
-                <td>{{ produit.nom }}</td>
-                <td>{{ produit.quantite }}</td>
-                <td>{{ produit.prix }}</td>
-                <td>
-                    <a href="{% url 'modifier_produit' produit.id %}" class="btn btn-primary btn-sm">Modifier</a>
-                    <a href="{% url 'supprimer_produit' produit.id %}" class="btn btn-danger btn-sm">Supprimer</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">Aucun produit trouvé.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="text-center mt-3">
-        <a href="{% url 'dashboard' %}" class="btn btn-secondary">⬅ Retour au Dashboard</a>
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="info-card">
+                <div class="info-icon" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <h3>Total Produits</h3>
+                <p class="info-value">{{ total_products }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="info-card">
+                <div class="info-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>En Stock</h3>
+                <p class="info-value">{{ total_quantity }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="info-card">
+                <div class="info-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h3>Valeur Totale</h3>
+                <p class="info-value">{{ total_stock_value|floatformat:0 }} DZD</p>
+            </div>
+        </div>
+    
+    <!-- Search and Filter Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="filter-section card shadow-sm">
+                <div class="card-body">
+                    <!-- Search Bar -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <form method="get" class="d-flex">
+                                <input type="text" name="search" class="form-control" placeholder="Rechercher un produit..." value="{{ search_query }}">
+                                {% if selected_category %}
+                                <input type="hidden" name="category" value="{{ selected_category }}">
+                                {% endif %}
+                                <button type="submit" class="btn btn-primary ms-2">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                {% if search_query or selected_category %}
+                                <a href="{% url 'produits:liste_produits' %}" class="btn btn-outline-secondary ms-2">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                                {% endif %}
+                            </form>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            {% if search_query %}
+                            <span class="badge bg-success">{{ page_obj.paginator.count }} résultat(s) trouvé(s)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0"><i class="fas fa-filter"></i> Filtrer par Catégorie</h5>
+                        {% if selected_category_obj %}
+                        <span class="badge bg-info">Catégorie: {{ selected_category_obj.name }}</span>
+                        {% elif selected_category == 'none' %}
+                        <span class="badge bg-warning">Catégorie: Non classés</span>
+                        {% endif %}
+                        {% if search_query %}
+                        <span class="badge bg-success">Recherche: "{{ search_query }}"</span>
+                        {% endif %}
+                    </div>
+                    <div class="filter-buttons">
+                        <a href="{% url 'produits:liste_produits' %}{% if search_query %}?search={{ search_query }}{% endif %}" class="btn btn-sm {% if not selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            <i class="fas fa-list"></i> Tous les Produits
+                        </a>
+                        {% for category in categories %}
+                        <a href="?category={{ category.id }}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-sm {% if selected_category == category.id|stringformat:'s' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            <i class="fas fa-tag"></i> {{ category.name }} ({{ category.produits.count }})
+                        </a>
+                        {% endfor %}
+                        <a href="?category=none{% if search_query %}&search={{ search_query }}{% endif %}" class="btn btn-sm {% if selected_category == 'none' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            <i class="fas fa-question-circle"></i> Non classés ({{ uncategorized_count }})
+                        </a>
+                        {% if not categories %}
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle"></i> Aucune catégorie disponible. <a href="/admin/produits/category/add/" target="_blank">Créer une catégorie</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-list"></i> Liste des Produits</h5>
+                        {% if selected_category or search_query %}
+                        <a href="{% url 'produits:liste_produits' %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-times"></i> Effacer les filtres
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if produits %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-tag"></i> Nom</th>
+                                        <th><i class="fas fa-folder\"></i> Catégorie</th>
+                                        <th><i class="fas fa-cubes"></i> Quantité</th>
+                                        <th><i class="fas fa-coins"></i> Prix</th>
+                                        <th><i class="fas fa-cog"></i> Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for produit in produits %}
+                                    <tr {% if produit.quantite <= low_stock_threshold %}class="low-stock-row"{% endif %}>
+                                        <td><strong>{{ produit.nom }}</strong></td>
+                                        <td>
+                                            {% if produit.category %}
+                                                <span class="badge bg-primary">{{ produit.category.name }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Non classé</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">{{ produit.quantite }} unités</span>
+                                            {% if produit.quantite <= low_stock_threshold %}
+                                                <span class="badge badge-low ms-2">Faible</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><strong>{{ produit.prix }} DZD</strong></td>
+                                        <td>
+                                            <a href="{% url 'produits:modifier_produit' produit.id %}" class="btn btn-sm btn-primary" title="Modifier">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </a>
+                                            <a href="{% url 'produits:supprimer_produit' produit.id %}" class="btn btn-sm btn-danger" title="Supprimer">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h4>Aucun produit trouvé</h4>
+                            <p>Commencez par ajouter votre premier produit</p>
+                            <a href="{% url 'produits:ajouter_produit' %}" class="btn btn-primary mt-3">
+                                <i class="fas fa-plus"></i> Ajouter un Produit
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <div class="card-footer">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">&laquo; Premier</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Précédent</a>
+                            </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+                            </li>
+                            
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Suivant</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Dernier &raquo;</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour au Dashboard
+            </a>
+        </div>
     </div>
 </div>
-</body>
-</html>
+<style>
+    .content-container { padding: 2rem 0; }
+    .page-header {
+        display: flex; justify-content: space-between; align-items: center;
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        color: white; padding: 2rem; border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .header-actions {
+        display: flex; gap: 0.5rem; align-items: center;
+    }
+    .header-content h1 { margin: 0; font-size: 2rem; font-weight: 700; }
+    .header-content i { margin-right: 10px; }
+    .page-subtitle { margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.95rem; }
+    .filter-section { 
+        background: linear-gradient(135deg, #f0f4f8 0%, #f8fafc 100%); 
+        border: 1px solid #e5e7eb;
+    }
+    .filter-section .card-body { padding: 1.5rem; }
+    .filter-section h5 { color: #1f2937; font-weight: 600; }
+    .filter-section .badge { font-size: 0.75rem; }
+    .filter-buttons {
+        display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem;
+    }
+    .filter-buttons .btn {
+        font-size: 0.85rem; padding: 0.5rem 1rem;
+        border: 2px solid #e5e7eb; transition: all 0.3s ease;
+    }
+    .filter-buttons .btn-primary {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        border-color: #2563eb; color: white;
+    }
+    .filter-buttons .btn-outline-primary {
+        background: white; color: #2563eb; border-color: #2563eb;
+    }
+    .filter-buttons .btn-outline-primary:hover {
+        background: #f0f4f8; transform: translateY(-2px);
+    }
+    .info-card {
+        background: white; border-radius: 12px; padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease; text-align: center;
+    }
+    .info-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12); }
+    .info-icon {
+        width: 60px; height: 60px; border-radius: 12px; display: flex;
+        align-items: center; justify-content: center; color: white;
+        font-size: 1.5rem; margin: 0 auto 1rem;
+    }
+    .info-card h3 { font-size: 0.9rem; color: #6b7280; font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase; }
+    .info-value { font-size: 1.8rem; font-weight: 700; color: #1f2937; margin: 0; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: #6b7280; }
+    .empty-state i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+    .empty-state h4 { color: #1f2937; font-weight: 600; }
+    @media (max-width: 768px) {
+        .page-header { flex-direction: column; text-align: center; }
+        .page-header .btn { width: 100%; }
+        .header-content h1 { font-size: 1.5rem; }
+    }
+</style>
+{% endblock %}
 

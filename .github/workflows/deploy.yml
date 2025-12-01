@@ -1,0 +1,79 @@
+name: Deploy to Production
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install deployment tools
+      run: |
+        pip install --upgrade pip
+        # Add deployment-specific tools here
+        # pip install awscli heroku3 etc.
+    
+    - name: Build and push Docker image
+      run: |
+        echo "Building Docker image for ${{ github.event.inputs.environment || 'production' }}"
+        docker build -t gestion-stock:${{ github.sha }} .
+        
+        # Example: Push to registry
+        # docker tag gestion-stock:${{ github.sha }} your-registry/gestion-stock:latest
+        # docker push your-registry/gestion-stock:latest
+    
+    - name: Deploy to environment
+      run: |
+        ENV="${{ github.event.inputs.environment || 'production' }}"
+        echo "Deploying to $ENV environment..."
+        
+        if [ "$ENV" = "production" ]; then
+          echo "🚀 Production deployment steps:"
+          echo "1. Database migrations"
+          echo "2. Static files collection"
+          echo "3. Application deployment"
+          echo "4. Health checks"
+          # Add production deployment commands
+        else
+          echo "🧪 Staging deployment steps:"
+          echo "1. Deploy to staging server"
+          echo "2. Run smoke tests"
+          # Add staging deployment commands
+        fi
+    
+    - name: Run post-deployment tests
+      run: |
+        echo "Running post-deployment health checks..."
+        # Add health check commands here
+        # curl -f https://your-app.com/health || exit 1
+    
+    - name: Notify team
+      if: always()
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "❌ Deployment failed!"
+        fi

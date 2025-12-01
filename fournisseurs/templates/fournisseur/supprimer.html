@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Supprimer Fournisseur</title>
-</head>
-<body>
-
+  </head>
+  <body>
     <h2>Supprimer le fournisseur</h2>
 
-    <p>Voulez-vous vraiment supprimer le fournisseur : <strong>{{ fournisseur.nom }}</strong> ?</p>
+    <p>
+      Voulez-vous vraiment supprimer le fournisseur :
+      <strong>{{ fournisseur.nom }}</strong> ?
+    </p>
 
     <form method="post">
-        {% csrf_token %}
-        <button type="submit">✔ Oui, supprimer</button>
-        <a href="{% url 'liste_fournisseurs' %}">✖ Annuler</a>
+      {% csrf_token %}
+      <button type="submit">✔ Oui, supprimer</button>
+      <a href="{% url 'fournisseurs:liste_fournisseurs' %}">✖ Annuler</a>
     </form>
-
-</body>
+  </body>
 </html>

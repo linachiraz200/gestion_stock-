@@ -1,11 +1,26 @@
-django==3.2
-djongo==1.3.6
-pymongo==4.7.2
-sqlparse==0.2.4   # مهم، لازم يكون 0.2.4 لتوافق djongo
-dnspython==2.8.0
-asgiref==3.10.0
+# Django Framework
+django==5.1.3
+
+# Database & Utilities
+asgiref==3.8.1
 tzdata==2025.2
-pytz
+pytz==2024.2
+sqlparse==0.5.2
+
+# Environment Variables Management
+python-dotenv==1.0.1
+
+# Production server
+gunicorn==21.2.0
+
+# MongoDB Support
+mongoengine==0.27.0
+pymongo==4.6.1
+dnspython==2.4.2
+
+# PDF Generation
+reportlab==4.0.7
+weasyprint==61.2
 
 
 

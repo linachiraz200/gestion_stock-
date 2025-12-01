@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Facture {{ facture.numero }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Facture {{ facture.numero }}</h2>
+        <div>
+            <a href="{% url 'factures:print_facture' facture.id %}" class="btn btn-secondary" target="_blank">
+                <i class="fas fa-print"></i> Imprimer
+            </a>
+            <a href="{% url 'factures:liste_factures' %}" class="btn btn-primary">Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Informations Client</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nom:</strong> {{ facture.client }}</p>
+                    <p><strong>Email:</strong> {{ facture.client.email }}</p>
+                    <p><strong>Téléphone:</strong> {{ facture.client.telephone }}</p>
+                    <p><strong>Adresse:</strong> {{ facture.client.adresse }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Informations Facture</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Numéro:</strong> {{ facture.numero }}</p>
+                    <p><strong>Date:</strong> {{ facture.date_creation|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Créée par:</strong> {{ facture.created_by.username }}</p>
+                    <p><strong>TVA:</strong> {{ facture.tva }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Détails des Produits</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Prix Unitaire</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in facture.items.all %}
+                        <tr>
+                            <td>{{ item.produit.nom }}</td>
+                            <td>{{ item.quantite }}</td>
+                            <td>{{ item.prix_unitaire }} DZD</td>
+                            <td>{{ item.total }} DZD</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">Total HT</th>
+                            <th>{{ facture.total_ht }} DZD</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3">TVA ({{ facture.tva }}%)</th>
+                            <th>{{ facture.montant_tva|floatformat:2 }} DZD</th>
+                        </tr>
+                        <tr class="table-primary">
+                            <th colspan="3">Total TTC</th>
+                            <th>{{ facture.total_ttc }} DZD</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Créer une Facture{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Créer une Nouvelle Facture</h2>
+
+    <form method="post" id="factureForm">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="client" class="form-label">Client</label>
+                    <select class="form-select" id="client" name="client" required>
+                        <option value="">Sélectionner un client</option>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}">{{ client }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <h4>Produits</h4>
+        <div class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <select class="form-select" id="produitSelect">
+                        <option value="">Sélectionner un produit</option>
+                        {% for produit in produits %}
+                        <option value="{{ produit.id }}" data-prix="{{ produit.prix }}" data-stock="{{ produit.quantite }}">
+                            {{ produit.nom }} (Stock: {{ produit.quantite }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" id="quantiteInput" placeholder="Quantité" min="1">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" id="prixInput" placeholder="Prix" step="0.01">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-success" onclick="ajouterProduit()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="produitsTable">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Prix Unitaire</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="produitsTableBody">
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Total HT</th>
+                        <th id="totalHT">0.00 DZD</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <input type="hidden" name="items" id="itemsInput">
+        
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Créer la Facture</button>
+            <a href="{% url 'factures:liste_factures' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+<script>
+let items = [];
+
+function ajouterProduit() {
+    const produitSelect = document.getElementById('produitSelect');
+    const quantiteInput = document.getElementById('quantiteInput');
+    const prixInput = document.getElementById('prixInput');
+    
+    if (!produitSelect.value || !quantiteInput.value || !prixInput.value) {
+        alert('Veuillez remplir tous les champs');
+        return;
+    }
+    
+    const produitOption = produitSelect.options[produitSelect.selectedIndex];
+    const stock = parseInt(produitOption.dataset.stock);
+    const quantite = parseInt(quantiteInput.value);
+    
+    if (quantite > stock) {
+        alert('Quantité insuffisante en stock');
+        return;
+    }
+    
+    const item = {
+        produit_id: produitSelect.value,
+        produit_nom: produitOption.text.split(' (Stock:')[0],
+        quantite: quantite,
+        prix_unitaire: parseFloat(prixInput.value),
+        total: quantite * parseFloat(prixInput.value)
+    };
+    
+    items.push(item);
+    updateTable();
+    
+    // Reset inputs
+    produitSelect.value = '';
+    quantiteInput.value = '';
+    prixInput.value = '';
+}
+
+function supprimerProduit(index) {
+    items.splice(index, 1);
+    updateTable();
+}
+
+function updateTable() {
+    const tbody = document.getElementById('produitsTableBody');
+    tbody.innerHTML = '';
+    
+    let totalHT = 0;
+    
+    items.forEach((item, index) => {
+        const row = tbody.insertRow();
+        row.innerHTML = `
+            <td>${item.produit_nom}</td>
+            <td>${item.quantite}</td>
+            <td>${item.prix_unitaire.toFixed(2)} DZD</td>
+            <td>${item.total.toFixed(2)} DZD</td>
+            <td><button type="button" class="btn btn-sm btn-danger" onclick="supprimerProduit(${index})">Supprimer</button></td>
+        `;
+        totalHT += item.total;
+    });
+    
+    document.getElementById('totalHT').textContent = totalHT.toFixed(2) + ' DZD';
+    document.getElementById('itemsInput').value = JSON.stringify(items);
+}
+
+document.getElementById('produitSelect').addEventListener('change', function() {
+    const option = this.options[this.selectedIndex];
+    if (option.value) {
+        document.getElementById('prixInput').value = option.dataset.prix;
+    }
+});
+</script>
+{% endblock %}

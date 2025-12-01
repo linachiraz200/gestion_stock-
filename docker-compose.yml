@@ -1,29 +1,14 @@
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
-    depends_on:
-      - mongo
-
-  mongo:
-    container_name: mongo
-    image: mongo:6
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data:
-
-
-
-
+      - "8080:8000"
+    environment:
+      - DEBUG=True
+    restart: unless-stopped
 
 
 
