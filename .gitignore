@@ -1,26 +1,53 @@
-# Ignore Python cache files
-__pycache__/
-*.py[cod]
-
-# Ignore Django database
-db.sqlite3
-
-# Ignore virtual environment folders
-venv/
-env/
-
-# Ignore VS Code settings
-.vscode/
-
-# Ignore compiled files and logs
+# Django
 *.log
 *.pot
 *.pyc
-*.pyo
-*.pyd
-*.db
-*.sqlite3
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
 
-# Ignore local settings or secrets
-*.env
-*.local
+# Environment variables
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json

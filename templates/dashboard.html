@@ -1,14 +1,403 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard - Gestion de Stock{% endblock %}
 
 {% block content %}
-<div style="text-align:center; margin-top:50px;">
-    <h1>Bienvenue dans le tableau de bord</h1>
-    <div style="margin-top:30px;">
-        <a href="{% url 'liste_produits' %}" class="btn">📦 Liste des Produits</a>
-        <a href="{% url 'liste_fournisseurs' %}" class="btn">🚚 Liste des Fournisseurs</a>
-        <a href="{% url 'liste_clients' %}" class="btn">👥 Liste des Clients</a>
+<div class="dashboard-container">
+  <!-- Welcome Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="welcome-card">
+        <div class="welcome-content">
+          <h1 class="welcome-title">
+            <i class="fas fa-wave-hand"></i> Bienvenue, {{ user.first_name|default:user.username }}!
+          </h1>
+          <p class="welcome-subtitle">
+            Gérez efficacement votre stock et vos clients
+          </p>
+        </div>
+        <div class="welcome-decoration">
+          <i class="fas fa-layer-group"></i>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Stats Section -->
+  <div class="row mb-5">
+    <div class="col-md-6 col-lg-3 mb-3">
+      <div class="stat-card stat-card-primary">
+        <div class="stat-icon">
+          <i class="fas fa-box"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-value">{{ clients.count }}</h3>
+          <p class="stat-label">Clients</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3 mb-3">
+      <div class="stat-card stat-card-success">
+        <div class="stat-icon">
+          <i class="fas fa-boxes"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-value">{{ produits_count }}</h3>
+          <p class="stat-label">Produits</p>
+          {% if low_stock_count %}
+          <p class="small text-danger mt-1">
+            Faible stock: {{ low_stock_count }} (≤ {{ low_stock_threshold }})
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3 mb-3">
+      <div class="stat-card stat-card-warning">
+        <div class="stat-icon">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-value">{{ fournisseurs_count }}</h3>
+          <p class="stat-label">Fournisseurs</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3 mb-3">
+      <div class="stat-card stat-card-info">
+        <div class="stat-icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-value">{{ total_stock_value|floatformat:0 }} DZD</h3>
+          <p class="stat-label">Valeur Stock</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h2 class="section-title"><i class="fas fa-zap"></i> Actions Rapides</h2>
+    </div>
+
+    <div class="col-md-6 col-lg-3 mb-3">
+      <a href="{% url 'produits:liste_produits' %}" class="quick-action-card">
+        <div class="action-icon primary">
+          <i class="fas fa-box"></i>
+        </div>
+        <h3>Produits</h3>
+        <p>Voir et gérer les produits</p>
+        <div class="action-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3 mb-3">
+      <a href="{% url 'clients:liste_clients' %}" class="quick-action-card">
+        <div class="action-icon success">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Clients</h3>
+        <p>Gérer vos clients</p>
+        <div class="action-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3 mb-3">
+      <a
+        href="{% url 'fournisseurs:liste_fournisseurs' %}"
+        class="quick-action-card"
+      >
+        <div class="action-icon warning">
+          <i class="fas fa-truck"></i>
+        </div>
+        <h3>Fournisseurs</h3>
+        <p>Gérer les fournisseurs</p>
+        <div class="action-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3 mb-3">
+      <a href="/admin/" class="quick-action-card">
+        <div class="action-icon danger">
+          <i class="fas fa-cog"></i>
+        </div>
+        <h3>Administration</h3>
+        <p>Panneau administrateur</p>
+        <div class="action-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Recent Clients Section -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fas fa-users"></i> Derniers Clients Ajoutés
+        </div>
+        <div class="card-body">
+          {% if clients %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>Téléphone</th>
+                  <th>Date d'Inscription</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for client in clients|slice:":5" %}
+                <tr>
+                  <td>
+                    <strong>{{ client.nom }} {{ client.prenom }}</strong>
+                  </td>
+                  <td>{{ client.email }}</td>
+                  <td>{{ client.telephone }}</td>
+                  <td>{{ client.date_creation|date:"d/m/Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center mt-3">
+            <a href="{% url 'clients:liste_clients' %}" class="btn btn-primary">
+              <i class="fas fa-eye"></i> Voir tous les clients
+            </a>
+          </div>
+          {% else %}
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Aucun client enregistré pour le
+            moment.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+  .dashboard-container {
+    padding: 2rem 0;
+  }
+
+  /* Welcome Card */
+  .welcome-card {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    border-radius: 12px;
+    padding: 3rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+  }
+  
+  [data-theme="dark"] .welcome-card {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  }
+
+  .welcome-content h1.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .welcome-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .welcome-decoration {
+    font-size: 4rem;
+    opacity: 0.2;
+  }
+
+  /* Stats Cards */
+  .stat-card {
+    border-radius: 12px;
+    padding: 2rem;
+    color: white;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-card-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  }
+
+  .stat-card-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+
+  .stat-card-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  }
+
+  .stat-card-info {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+    opacity: 0.8;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin: 0.5rem 0 0 0;
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title i {
+    color: #2563eb;
+  }
+
+  /* Quick Action Cards */
+  .quick-action-card {
+    display: block;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+  }
+
+  .quick-action-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #1e40af);
+  }
+
+  .quick-action-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .quick-action-card:hover .action-arrow {
+    transform: translateX(5px);
+  }
+
+  .action-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin: 0 auto 1rem;
+  }
+
+  .action-icon.primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  }
+
+  .action-icon.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+
+  .action-icon.warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  }
+
+  .action-icon.danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  }
+
+  .quick-action-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+  }
+
+  .quick-action-card p {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin: 0.5rem 0 0 0;
+  }
+  
+  [data-theme="dark"] .quick-action-card p {
+    color: #9ca3af;
+  }
+
+  .action-arrow {
+    transition: all 0.3s ease;
+    color: #2563eb;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .welcome-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .welcome-title {
+      font-size: 1.8rem !important;
+    }
+
+    .stat-card {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+    }
+  }
+</style>
 {% endblock %}

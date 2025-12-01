@@ -1,151 +1,397 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard - Gestion de Stock</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Gestion de Stock{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --primary-light: #3b82f6;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --dark: #1f2937;
+        --light: #f9fafb;
+        --gray: #6b7280;
+        --bg-color: #f9fafb;
+        --text-color: #1f2937;
+        --card-bg: #ffffff;
+        --border-color: #e5e7eb;
+      }
+
+      [data-theme="dark"] {
+        --bg-color: #1f2937;
+        --text-color: #f9fafb;
+        --card-bg: #374151;
+        --border-color: #4b5563;
+        --light: #1f2937;
+        --dark: #f9fafb;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--bg-color);
+        min-height: 100vh;
+        color: var(--text-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Navigation Bar */
+      .navbar {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 1rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white !important;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .navbar-brand i {
+        font-size: 1.8rem;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+        border-radius: 6px;
+      }
+
+      .nav-link:hover {
+        color: white !important;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .nav-link.active {
+        background: rgba(255, 255, 255, 0.3);
+        color: white !important;
+      }
+
+      .user-info {
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .logout-btn {
+        background: var(--danger);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .logout-btn:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      }
+
+      /* Main Content */
+      .main-content {
+        padding: 2rem;
+        min-height: calc(100vh - 80px);
+      }
+
+      /* Container */
+      .container-lg {
+        max-width: 1400px;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background: var(--primary);
+        border: none;
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-success {
+        background: var(--success);
+        border: none;
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-success:hover {
+        background: #059669;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        border: none;
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-danger:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+      }
+
+      /* Cards */
+      .card {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--card-bg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .card-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        font-weight: 600;
+        border: none;
+      }
+
+      /* Tables */
+      .table {
+        margin: 0;
+      }
+
+      .table thead th {
+        background: var(--primary);
+        color: white;
+        border: none;
+        font-weight: 600;
+        padding: 1rem;
+      }
+
+      .table tbody tr {
+        transition: all 0.2s ease;
+      }
+
+      .table tbody tr:hover {
+        background: rgba(37, 99, 235, 0.05);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--dark);
+        color: white;
+        text-align: center;
+        padding: 2rem;
+        margin-top: 4rem;
+        border-top: 3px solid var(--primary);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 0.75rem 1rem;
         }
 
-        /* --- الخلفية القديمة Cyber Security --- */
-        .dashboard-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?fit=crop&w=1400&q=80") 
-                no-repeat center center;
-            background-size: cover;
-            z-index: -1;
+        .navbar-brand {
+          font-size: 1.3rem;
         }
 
-        /* --- الشريط العلوي على اليمين --- */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            right: 0;
-            padding: 15px;
-            display: flex;
-            gap: 20px;
-            background: rgba(0,0,0,0.8);
-            align-items: center;
+        .user-info {
+          flex-direction: column;
+          gap: 10px;
         }
 
-        .top-nav a {
-            color: cyan;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
+        .main-content {
+          padding: 1rem;
         }
-
-        .top-nav a:hover {
-            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
-        }
-
-        /* --- محتوى الوسط --- */
-        .content {
-            text-align: center;
-            padding: 150px 20px 50px 20px;
-            color: #ffffff;
-        }
-
-        .content h1 {
-            font-size: 3em;
-            color: #ffffff;
-            text-shadow: 0 0 5px #000000, 1px 1px 5px #000000;
-        }
-
-        .content p {
-            font-size: 1.5em;
-            margin-top: 10px;
-            color: #ffffff;
-            text-shadow: 0 0 3px #000000, 1px 1px 4px #000000;
-        }
-
-        /* --- الشريط السفلي --- */
-        footer.bottom-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: rgba(0,0,0,0.8);
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .social-buttons a {
-            color: cyan;
-            margin: 0 10px;
-            text-decoration: none;
-            font-size: 1.3em;
-            transition: 0.3s;
-        }
-
-        .social-buttons a:hover {
-            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
-        }
-
-        /* --- حقوق الطبع --- */
-        .copyright {
-            margin-top: 5px;
-            font-size: 0.9em;
-            color: #00ffff;
-        }
-
-        /* --- بوتون الفواتير نفس شكل البوتونات الأخرى --- */
-        .invoice-btn {
-            color: cyan;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .invoice-btn:hover {
-            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
-        }
+      }
     </style>
-</head>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'dashboard' %}">
+          <i class="fas fa-boxes"></i>
+          Gestion Stock
+        </a>
 
-<body>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!-- الخلفية القديمة -->
-    <div class="dashboard-bg"></div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                href="{% url 'dashboard' %}"
+              >
+                <i class="fas fa-home"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if 'produits' in request.path %}active{% endif %}"
+                href="{% url 'produits:liste_produits' %}"
+              >
+                <i class="fas fa-box"></i> Produits
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if 'clients' in request.path %}active{% endif %}"
+                href="{% url 'clients:liste_clients' %}"
+              >
+                <i class="fas fa-users"></i> Clients
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if 'fournisseur' in request.path %}active{% endif %}"
+                href="{% url 'fournisseurs:liste_fournisseurs' %}"
+              >
+                <i class="fas fa-truck"></i> Fournisseurs
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if 'factures' in request.path %}active{% endif %}"
+                href="{% url 'factures:liste_factures' %}"
+              >
+                <i class="fas fa-file-invoice"></i> Factures
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/">
+                <i class="fas fa-cog"></i> Admin
+              </a>
+            </li>
 
-    <!-- الشريط العلوي مع البوتونات -->
-    <div class="top-nav">
-        <a href="/dashboard/">Accueil</a>
-        <a href="/produits/">Produits</a>
-        <a href="/fournisseur/">Fournisseurs</a>
-        <a href="/logout/">Déconnexion</a>
+            <li class="nav-item">
+              <a class="nav-link" href="#" onclick="toggleDarkMode(); return false;" id="darkModeToggle">
+                <i class="fas fa-moon"></i> Dark
+              </a>
+            </li>
 
-      <a href="{% url 'clients:liste_clients' %}">Clients</a>
-
-
-    </div>
-
-    <!-- محتوى الوسط -->
-    <div class="content">
-        <h1>Bienvenue dans votre Dashboard</h1>
-        <p>Cette interface est prête pour vos opérations de gestion de stock.</p>
-    </div>
-
-    <!-- الشريط السفلي -->
-    <footer class="bottom-bar">
-        <div class="social-buttons">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-telegram"></i></a>
+            <li class="nav-item ms-3">
+              <div class="user-info">
+                <div class="user-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <span>{{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="logout-btn">
+                  <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+              </div>
+            </li>
+            {% endif %}
+          </ul>
         </div>
-        <div class="copyright">
-            © 2025 Gestion de Stock - Tous droits réservés
-        </div>
-    </footer>
+      </div>
+    </nav>
 
-</body>
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="container-lg">{% block content %}{% endblock %}</div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function toggleDarkMode() {
+        const body = document.body;
+        const isDark = body.getAttribute('data-theme') === 'dark';
+        const newTheme = isDark ? 'light' : 'dark';
+        const link = document.querySelector('#darkModeToggle');
+        
+        body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        link.innerHTML = isDark ? '<i class="fas fa-moon"></i> Dark' : '<i class="fas fa-sun"></i> Light';
+      }
+      
+      // Load saved theme
+      document.addEventListener('DOMContentLoaded', function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const link = document.querySelector('#darkModeToggle');
+        
+        if (link) {
+          document.body.setAttribute('data-theme', savedTheme);
+          link.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
+        }
+      });
+    </script>
+  </body>
 </html>

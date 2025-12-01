@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer Facture{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Confirmer la Suppression</h4>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <strong>Attention!</strong> Êtes-vous sûr de vouloir supprimer la facture <strong>{{ facture.numero }}</strong> ?
+                <br>Cette action restaurera le stock des produits et ne peut pas être annulée.
+            </div>
+            
+            <p><strong>Client:</strong> {{ facture.client }}</p>
+            <p><strong>Date:</strong> {{ facture.date_creation|date:"d/m/Y H:i" }}</p>
+            <p><strong>Total:</strong> {{ facture.total_ttc }} €</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Oui, Supprimer</button>
+                <a href="{% url 'factures:liste_factures' %}" class="btn btn-secondary">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

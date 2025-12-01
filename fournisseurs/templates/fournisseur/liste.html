@@ -1,134 +1,228 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Liste des Fournisseurs</title>
-    <style>
-        body { 
-            font-family: Arial; 
-            background:#eef2f3; 
-            padding:20px; 
-        }
+{% extends 'base.html' %}
 
-        .title-box{
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            gap:10px;
-            margin-bottom:20px;
-        }
+{% block title %}Fournisseurs - Gestion de Stock{% endblock %}
 
-        .title-box img{
-            width:40px;
-            height:40px;
-        }
-
-        table {
-            width: 70%; 
-            margin: auto; 
-            border-collapse: collapse;
-            background: white; 
-            box-shadow: 0 0 10px #aaa;
-        }
-
-        th, td {
-            padding: 12px; 
-            border: 1px solid #ddd; 
-            text-align: center;
-        }
-
-        th { 
-            background: #007bff; 
-            color: white; 
-        }
-
-        tr:hover { 
-            background: #f1f1f1; 
-        }
-
-        .btn-ajouter {
-            display: block; 
-            width: 220px; 
-            margin: 20px auto;
-            background:#28a745; 
-            color:white; 
-            text-align:center;
-            padding:12px; 
-            text-decoration:none; 
-            border-radius:6px;
-            font-size:16px;
-            font-weight:bold;
-        }
-
-        .btn-ajouter:hover {
-            background:#218838;
-        }
-
-        .btn-modifier { 
-            color: #007bff; 
-            font-weight:bold;
-            text-decoration:none; 
-        }
-
-        .btn-modifier:hover { 
-            text-decoration: underline;
-        }
-
-        .btn-supprimer { 
-            color: red; 
-            font-weight:bold;
-            text-decoration:none; 
-        }
-
-        .btn-supprimer:hover { 
-            text-decoration: underline;
-        }
-
-        .back { 
-            text-align:center; 
-            margin-top:20px; 
-        }
-
-        .back a {
-            color:#007bff;
-            text-decoration:none;
-            font-size:18px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="title-box">
-    <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png">
-    <h1>Liste des Fournisseurs</h1>
+{% block content %}
+<div class="content-container">
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="page-header">
+        <div class="header-content">
+          <h1 class="page-title">
+            <i class="fas fa-truck"></i> Gestion des Fournisseurs
+          </h1>
+          <p class="page-subtitle">
+            Gérez vos relations fournisseurs et vos approvisionnements
+          </p>
+        </div>
+        <a
+          href="{% url 'fournisseurs:ajouter_fournisseur' %}"
+          class="btn btn-primary"
+        >
+          <i class="fas fa-plus"></i> Ajouter un Fournisseur
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-md-4 mb-3">
+      <div class="info-card">
+        <div
+          class="info-icon"
+          style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%)"
+        >
+          <i class="fas fa-building"></i>
+        </div>
+        <h3>Total Fournisseurs</h3>
+        <p class="info-value">{{ fournisseurs|length }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="info-card">
+        <div
+          class="info-icon"
+          style="background: linear-gradient(135deg, #10b981 0%, #059669 100%)"
+        >
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3>Localisations</h3>
+        <p class="info-value">{{ fournisseurs|length }}</p>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="info-card">
+        <div
+          class="info-icon"
+          style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"
+        >
+          <i class="fas fa-phone"></i>
+        </div>
+        <h3>Contacts</h3>
+        <p class="info-value">Actifs</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="fas fa-list"></i> Liste des Fournisseurs
+        </div>
+        <div class="card-body">
+          {% if fournisseurs %}
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-building"></i> Nom</th>
+                  <th><i class="fas fa-map-marker-alt"></i> Adresse</th>
+                  <th><i class="fas fa-phone"></i> Téléphone</th>
+                  <th><i class="fas fa-cog"></i> Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for f in fournisseurs %}
+                <tr>
+                  <td><strong>{{ f.nom }}</strong></td>
+                  <td>{{ f.adresse }}</td>
+                  <td><a href="tel:{{ f.telephone }}">{{ f.telephone }}</a></td>
+                  <td>
+                    <a
+                      href="{% url 'fournisseurs:modifier_fournisseur' f.id %}"
+                      class="btn btn-sm btn-primary"
+                      title="Modifier"
+                    >
+                      <i class="fas fa-edit"></i> Modifier
+                    </a>
+                    <a
+                      href="{% url 'fournisseurs:supprimer_fournisseur' f.id %}"
+                      class="btn btn-sm btn-danger"
+                      title="Supprimer"
+                    >
+                      <i class="fas fa-trash"></i> Supprimer
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h4>Aucun fournisseur trouvé</h4>
+            <p>Commencez par ajouter votre premier fournisseur</p>
+            <a
+              href="{% url 'fournisseurs:ajouter_fournisseur' %}"
+              class="btn btn-primary mt-3"
+            >
+              <i class="fas fa-plus"></i> Ajouter un Fournisseur
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 text-center">
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Retour au Dashboard
+      </a>
+    </div>
+  </div>
 </div>
-
-<a href="/fournisseur/ajouter/" class="btn-ajouter">+ Ajouter Fournisseur</a>
-
-<table>
-    <tr>
-        <th>Nom</th>
-        <th>Adresse</th>
-        <th>Téléphone</th>
-        <th>Actions</th>
-    </tr>
-
-    {% for f in fournisseurs %}
-    <tr>
-        <td>{{ f.nom }}</td>
-        <td>{{ f.adresse }}</td>
-        <td>{{ f.telephone }}</td>
-        <td>
-            <a href="/fournisseur/modifier/{{ f.id }}/" class="btn-modifier">Modifier</a> |
-            <a href="/fournisseur/supprimer/{{ f.id }}/" class="btn-supprimer">Supprimer</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-
-<div class="back">
-    <a href="/dashboard/">⬅ Retour au Dashboard</a>
-</div>
-
-</body>
-</html>
+<style>
+  .content-container {
+    padding: 2rem 0;
+  }
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .header-content h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .header-content i {
+    margin-right: 10px;
+  }
+  .page-subtitle {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    font-size: 0.95rem;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  .info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  }
+  .info-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+  }
+  .info-card h3 {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .info-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+  }
+  .empty-state i {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+  }
+  .empty-state h4 {
+    color: #1f2937;
+    font-weight: 600;
+  }
+  @media (max-width: 768px) {
+    .page-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    .page-header .btn {
+      width: 100%;
+    }
+    .header-content h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}

@@ -1,43 +1,81 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Modifier Client</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container mt-5">
-    <h2 class="text-center mb-4">✏️ Modifier Client</h2>
-
-    <form method="POST">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="nom">Nom :</label>
-            <input type="text" id="nom" name="nom" class="form-control" value="{{ client.nom }}" required>
+{% extends 'base.html' %}
+{% block title %}Modifier Client - Gestion de Stock{% endblock %}
+{% block content %}
+<div class="form-container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h3><i class="fas fa-edit"></i> Modifier le Client</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="client-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user"></i> Nom</label>
+                                <input type="text" name="nom" class="form-control" value="{{ client.nom }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user"></i> Prénom</label>
+                                <input type="text" name="prenom" class="form-control" value="{{ client.prenom }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                                <input type="email" name="email" class="form-control" value="{{ client.email }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-phone"></i> Téléphone</label>
+                                <input type="text" name="telephone" class="form-control" value="{{ client.telephone }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Adresse</label>
+                            <textarea name="adresse" class="form-control" rows="3" required>{{ client.adresse }}</textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Mettre à jour
+                            </button>
+                            <a href="{% url 'clients:liste_clients' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label for="prenom">Prénom :</label>
-            <input type="text" id="prenom" name="prenom" class="form-control" value="{{ client.prenom }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="email">Email :</label>
-            <input type="email" id="email" name="email" class="form-control" value="{{ client.email }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="telephone">Téléphone :</label>
-            <input type="text" id="telephone" name="telephone" class="form-control" value="{{ client.telephone }}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="adresse">Adresse :</label>
-            <textarea id="adresse" name="adresse" class="form-control" required>{{ client.adresse }}</textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Modifier</button>
-    </form>
+    </div>
+</div>
+<style>
+    .form-container { padding: 2rem 0; }
+    .card-header h3 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+    .card-header i { margin-right: 10px; color: #2563eb; }
+    .form-label {
+        font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;
+    }
+    .form-label i { margin-right: 5px; color: #2563eb; }
+    .form-control {
+        border: 2px solid #e5e7eb; border-radius: 8px; padding: 0.75rem;
+        transition: all 0.3s ease; font-size: 0.95rem;
+    }
+    .form-control:focus {
+        border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .form-actions {
+        display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+    .form-actions .btn { flex: 1; padding: 0.75rem; font-weight: 600; }
+    .form-actions .btn i { margin-right: 5px; }
+    @media (max-width: 768px) {
+        .form-actions { flex-direction: column; }
+        .form-actions .btn { width: 100%; }
+    }
+</style>
+{% endblock %}
 
     <a href="{% url 'clients:liste_clients' %}" class="btn btn-secondary mt-3">← Retour à la liste</a>
 </div>
